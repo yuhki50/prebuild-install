@@ -10,12 +10,10 @@ var noop = Object.assign({
 var zlib = require('zlib')
 var util = require('./util')
 var error = require('./error')
-var url = require('url')
-var tunnel = require('tunnel-agent')
+var proxy = require('./proxy')
 var mkdirp = require('mkdirp')
 
-function downloadPrebuild (opts, cb) {
-  var downloadUrl = util.getDownloadUrl(opts)
+function downloadPrebuild (downloadUrl, opts, cb) {
   var cachedPrebuild = util.cachedPrebuild(downloadUrl)
   var localPrebuild = util.localPrebuild(downloadUrl)
   var tempFile = util.tempFile(cachedPrebuild)
@@ -47,27 +45,14 @@ function downloadPrebuild (opts, cb) {
         }
 
         log.http('request', 'GET ' + downloadUrl)
-        var reqOpts = { url: downloadUrl }
-        var proxy = opts['https-proxy'] || opts.proxy
+        var reqOpts = proxy({ url: downloadUrl }, opts)
 
-        if (proxy) {
-          var parsedDownloadUrl = url.parse(downloadUrl)
-          var parsedProxy = url.parse(proxy)
-          var uriProtocol = (parsedDownloadUrl.protocol === 'https:' ? 'https' : 'http')
-          var proxyProtocol = (parsedProxy.protocol === 'https:' ? 'Https' : 'Http')
-          var tunnelFnName = [uriProtocol, proxyProtocol].join('Over')
-          reqOpts.agent = tunnel[tunnelFnName]({
-            proxy: {
-              host: parsedProxy.hostname,
-              port: +parsedProxy.port,
-              proxyAuth: parsedProxy.auth
-            }
-          })
-          log.http('request', 'Proxy setup detected (Host: ' +
-            parsedProxy.hostname + ', Port: ' +
-            parsedProxy.port + ', Authentication: ' +
-            (parsedProxy.auth ? 'Yes' : 'No') + ')' +
-            ' Tunneling with ' + tunnelFnName)
+        if (opts.token) {
+          reqOpts.url += '?access_token=' + opts.token
+          reqOpts.headers = {
+            'User-Agent': 'simple-get',
+            'Accept': 'application/octet-stream'
+          }
         }
 
         var req = get(reqOpts, function (err, res) {
