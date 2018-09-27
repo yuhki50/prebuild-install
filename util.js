@@ -47,7 +47,7 @@ function urlTemplate (opts) {
     return hostMirrorUrl + '/{tag_prefix}{version}/' + packageName
   }
 
-  if (opts.pkg.binary) {
+  if (opts.pkg.binary && opts.pkg.binary.host) {
     return [
       opts.pkg.binary.host,
       opts.pkg.binary.remote_path,
