@@ -190,3 +190,29 @@ test('getDownloadUrl() expands template to correct values', function (t) {
   t.equal(url3, url2, 'scope does not matter for download url')
   t.end()
 })
+
+test('localPrebuild', function (t) {
+  var envProp = 'npm_config_a_native_module_local_prebuilds'
+  var basename = 'a-native-module-v1.4.0-node-v14-linux-x64.tar.gz'
+  var url = 'https://github.com/a-native-module/a-native-module/releases/download/v1.4.0/' + basename
+  var o1 = {
+    pkg: {
+      name: 'a-native-module'
+    }
+  }
+  var path1 = util.localPrebuild(url, o1)
+  t.equal(path1, path.join('prebuilds', basename))
+  var o2 = {
+    pkg: {
+      name: 'a-native-module'
+    },
+    'local-prebuilds': path.join('', 'path', 'to', 'prebuilds')
+  }
+  var path2 = util.localPrebuild(url, o2)
+  t.equal(path2, path.join(o2['local-prebuilds'], basename), 'opts overrides default')
+  var envPrefix = path.join('', 'overriden', 'path', 'to', 'prebuilds')
+  process.env[envProp] = envPrefix
+  var path3 = util.localPrebuild(url, o2)
+  t.equal(path3, path.join(envPrefix, basename), 'env overrides opts')
+  t.end()
+})
