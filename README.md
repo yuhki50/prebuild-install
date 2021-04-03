@@ -97,7 +97,6 @@ So if you are installing `leveldown@1.2.3` the resulting url will be:
 http://overriden-host.com/overriden-path/v1.2.3/leveldown-v1.2.3-node-v57-win32-x64.tar.gz
 ```
 
-
 #### Local prebuilds
 
 If you want to use prebuilds from your local filesystem, you can use the `% your package name %_local_prebuilds` .npmrc variable to set a path to the folder containing prebuilds. For example:
