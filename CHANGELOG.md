@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.1] - 2021-04-04
+
+### Fixed
+
+- Support `force` & `buildFromSource` options in yarn ([#140](https://github.com/prebuild/prebuild-install/issues/140)) ([`8cb1ced`](https://github.com/prebuild/prebuild-install/commit/8cb1ced)) (João Moreno)
+- Bump `node-abi` to prevent dedupe (closes [#135](https://github.com/prebuild/prebuild-install/issues/135)) ([`2950fb2`](https://github.com/prebuild/prebuild-install/commit/2950fb2)) (Vincent Weevers)
+
 ## [6.1.0] - 2021-04-03
 
 ### Added
@@ -35,6 +42,8 @@
 ### Changed
 
 - Replace `mkdirp` dependency with `mkdirp-classic` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+[6.1.1]: https://github.com/prebuild/prebuild-install/compare/v6.1.0...v6.1.1
 
 [6.1.0]: https://github.com/prebuild/prebuild-install/compare/v6.0.1...v6.1.0
 
