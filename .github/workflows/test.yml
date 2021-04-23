@@ -23,7 +23,5 @@ jobs:
           architecture: ${{ matrix.arch }}
       - name: Install
         run: npm install
-      # Temporary step to check that we have npm 7 in the matrix
-      - run: npm --version
       - name: Test
         run: npm test
