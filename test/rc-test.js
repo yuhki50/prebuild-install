@@ -1,12 +1,12 @@
-var test = require('tape')
-var path = require('path')
-var exec = require('child_process').exec
-var fs = require('fs')
-var tempy = require('tempy') // Locked to 0.2.1 for node 6 support
-var cleanEnv = require('./util/clean-env')
+const test = require('tape')
+const path = require('path')
+const exec = require('child_process').exec
+const fs = require('fs')
+const tempy = require('tempy') // Locked to 0.2.1 for node 6 support
+const cleanEnv = require('./util/clean-env')
 
 test('custom config and aliases', function (t) {
-  var args = [
+  const args = [
     '--arch ARCH',
     '--platform PLATFORM',
     '--download https://foo.bar',
@@ -45,7 +45,7 @@ test('custom config and aliases', function (t) {
 
 // TODO: merge into above test
 test('npm args are passed on from npm environment into rc', function (t) {
-  var args = [
+  const args = [
     '--build-from-source',
     '--download',
     'https://foo.bar',
@@ -63,7 +63,7 @@ test('npm args are passed on from npm environment into rc', function (t) {
 })
 
 test('npm_config_* are passed on from environment into rc', function (t) {
-  var env = {
+  const env = {
     // Note that these are validated by npm
     npm_config_proxy: 'http://localhost/',
     npm_config_https_proxy: 'https://localhost/',
@@ -86,14 +86,14 @@ test('npm_config_* are passed on from environment into rc', function (t) {
 })
 
 test('can pass in external package config to rc', function (t) {
-  var pkg = {
+  const pkg = {
     config: {
       target: '1.0.0',
       runtime: 'electron',
       arch: 'woohoo-arch'
     }
   }
-  var rc = require('../rc')(pkg)
+  const rc = require('../rc')(pkg)
   t.equal(rc.target, '1.0.0', 'correct target')
   t.equal(rc.runtime, 'electron', 'correct runtime')
   t.equal(rc.arch, 'woohoo-arch', 'correct arch')
@@ -108,7 +108,7 @@ test('use default ABI', function (t) {
 })
 
 test('using --tag-prefix will set the tag prefix', function (t) {
-  var args = ['--tag-prefix @scoped/package@']
+  const args = ['--tag-prefix @scoped/package@']
   runRc(t, args.join(' '), {}, function (rc) {
     t.equal(rc['tag-prefix'], '@scoped/package@', 'tag prefix should be set')
     t.end()
@@ -116,7 +116,7 @@ test('using --tag-prefix will set the tag prefix', function (t) {
 })
 
 function runRc (t, args, env, cb) {
-  var pkg = {
+  const pkg = {
     name: 'test',
     private: true,
     scripts: {
@@ -124,14 +124,14 @@ function runRc (t, args, env, cb) {
     }
   }
 
-  var tmp = tempy.directory()
-  var json = JSON.stringify(pkg)
+  const tmp = tempy.directory()
+  const json = JSON.stringify(pkg)
 
   fs.writeFile(path.join(tmp, 'package.json'), json, function (err) {
     if (err) throw err
 
-    var npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-    var cmd = npm + ' run install'
+    const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+    const cmd = npm + ' run install'
 
     env = Object.assign(cleanEnv(process.env), env)
 
@@ -139,8 +139,10 @@ function runRc (t, args, env, cb) {
       t.error(err, 'no error')
       t.equal(stderr.trim(), '', 'no stderr')
 
+      let result
+
       try {
-        var result = JSON.parse(stdout.slice(stdout.indexOf('{')))
+        result = JSON.parse(stdout.slice(stdout.indexOf('{')))
       } catch (e) {
         return t.fail(e)
       }

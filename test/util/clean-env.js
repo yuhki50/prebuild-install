@@ -1,9 +1,9 @@
-var hasOwnProperty = Object.prototype.hasOwnProperty
+const hasOwnProperty = Object.prototype.hasOwnProperty
 
 module.exports = function (env) {
-  var clean = {}
+  const clean = {}
 
-  for (var k in env) {
+  for (const k in env) {
     if (!hasOwnProperty.call(env, k)) continue
     if (/^npm_/i.test(k)) continue
 

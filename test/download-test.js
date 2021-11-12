@@ -1,28 +1,28 @@
-var test = require('tape')
-var fs = require('fs')
-var rm = require('rimraf')
-var path = require('path')
-var http = require('http')
-var https = require('https')
-var download = require('../download')
-var util = require('../util')
-var error = require('../error')
+const test = require('tape')
+const fs = require('fs')
+const rm = require('rimraf')
+const path = require('path')
+const http = require('http')
+const https = require('https')
+const download = require('../download')
+const util = require('../util')
+const error = require('../error')
 
-var build = path.join(__dirname, 'build')
-var unpacked = path.join(build, 'Release/leveldown.node')
+const build = path.join(__dirname, 'build')
+const unpacked = path.join(build, 'Release/leveldown.node')
 
 test('downloading from GitHub, not cached', function (t) {
   t.plan(10)
   rm.sync(build)
   rm.sync(util.prebuildCache())
 
-  var opts = getOpts()
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
-  var tempFile
+  const opts = getOpts()
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  let tempFile
 
-  var writeStreamCount = 0
-  var _createWriteStream = fs.createWriteStream
+  let writeStreamCount = 0
+  const _createWriteStream = fs.createWriteStream
   fs.createWriteStream = function (path) {
     if (writeStreamCount++ === 0) {
       tempFile = path
@@ -33,13 +33,13 @@ test('downloading from GitHub, not cached', function (t) {
     return _createWriteStream(path)
   }
 
-  var _createReadStream = fs.createReadStream
+  const _createReadStream = fs.createReadStream
   fs.createReadStream = function (path) {
     t.equal(path, cachedPrebuild, 'createReadStream called for cachedPrebuild')
     return _createReadStream(path)
   }
 
-  var _request = https.request
+  const _request = https.request
   https.request = function (opts) {
     https.request = _request
     t.equal('https://' + opts.hostname + opts.path, downloadUrl, 'correct url')
@@ -63,17 +63,17 @@ test('cached prebuild', function (t) {
   t.plan(5)
   rm.sync(build)
 
-  var opts = getOpts()
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  const opts = getOpts()
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
 
-  var _createWriteStream = fs.createWriteStream
+  const _createWriteStream = fs.createWriteStream
   fs.createWriteStream = function (path) {
     t.ok(/\.node$/i.test(path), 'this is the unpacked file')
     return _createWriteStream(path)
   }
 
-  var _createReadStream = fs.createReadStream
+  const _createReadStream = fs.createReadStream
   fs.createReadStream = function (path) {
     t.equal(path, cachedPrebuild, 'createReadStream called for cachedPrebuild')
     return _createReadStream(path)
@@ -93,23 +93,23 @@ test('local prebuild', function (t) {
   t.plan(6)
   rm.sync(build)
 
-  var opts = getOpts()
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
-  var localPrebuild = util.localPrebuild(downloadUrl, opts)
+  const opts = getOpts()
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  const localPrebuild = util.localPrebuild(downloadUrl, opts)
 
   t.ok(fs.existsSync(cachedPrebuild), 'cached prebuild exists')
 
   // fs.copyFileSync() not available before Node 8.5
   fs.writeFileSync(localPrebuild, fs.readFileSync(cachedPrebuild))
 
-  var _createWriteStream = fs.createWriteStream
+  const _createWriteStream = fs.createWriteStream
   fs.createWriteStream = function (path) {
     t.ok(/\.node$/i.test(path), 'this is the unpacked file')
     return _createWriteStream(path)
   }
 
-  var _createReadStream = fs.createReadStream
+  const _createReadStream = fs.createReadStream
   fs.createReadStream = function (path) {
     t.equal(path, localPrebuild, 'createReadStream called for localPrebuild')
     return _createReadStream(path)
@@ -129,15 +129,15 @@ test('local prebuild', function (t) {
 test('non existing host should fail with no dangling temp file', function (t) {
   t.plan(3)
 
-  var opts = getOpts()
+  const opts = getOpts()
   opts.pkg.binary = {
     host: 'https://foo.bar.baz'
   }
 
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
 
-  var _createWriteStream = fs.createWriteStream
+  const _createWriteStream = fs.createWriteStream
   fs.createWriteStream = function (path) {
     t.ok(false, 'no temporary file should be written')
     return _createWriteStream(path)
@@ -155,17 +155,17 @@ test('non existing host should fail with no dangling temp file', function (t) {
 test('existing host but invalid url should fail', function (t) {
   t.plan(3)
 
-  var opts = getOpts()
+  const opts = getOpts()
   opts.pkg.binary = {
     host: 'http://localhost:8888',
     remote_path: 'prebuilds',
     package_name: 'woohooo-{abi}'
   }
 
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
 
-  var server = http.createServer(function (req, res) {
+  const server = http.createServer(function (req, res) {
     t.equal(req.url, '/prebuilds/woohooo-' + opts.abi, 'correct url')
     res.statusCode = 404
     res.end()
@@ -182,31 +182,31 @@ test('existing host but invalid url should fail', function (t) {
 test('error during download should fail with no dangling temp file', function (t) {
   t.plan(7)
 
-  var downloadError = new Error('something went wrong during download')
+  const downloadError = new Error('something went wrong during download')
 
-  var opts = getOpts()
+  const opts = getOpts()
   opts.pkg.binary = {
     host: 'http://localhost:8889',
     remote_path: 'prebuilds',
     package_name: 'woohooo-{abi}'
   }
 
-  var downloadUrl = util.getDownloadUrl(opts)
-  var cachedPrebuild = util.cachedPrebuild(downloadUrl)
-  var tempFile
+  const downloadUrl = util.getDownloadUrl(opts)
+  const cachedPrebuild = util.cachedPrebuild(downloadUrl)
+  let tempFile
 
-  var _createWriteStream = fs.createWriteStream
+  const _createWriteStream = fs.createWriteStream
   fs.createWriteStream = function (path) {
     tempFile = path
     t.ok(/\.tmp$/i.test(path), 'this is the temporary file')
     return _createWriteStream(path)
   }
 
-  var _request = http.request
+  const _request = http.request
   http.request = function (opts) {
     http.request = _request
     t.equal('http://' + opts.hostname + ':' + opts.port + opts.path, downloadUrl, 'correct url')
-    var wrapped = arguments[1]
+    const wrapped = arguments[1]
     arguments[1] = function (res) {
       t.equal(res.statusCode, 200, 'correct statusCode')
       // simulates error during download
@@ -216,7 +216,7 @@ test('error during download should fail with no dangling temp file', function (t
     return _request.apply(http, arguments)
   }
 
-  var server = http.createServer(function (req, res) {
+  const server = http.createServer(function (req, res) {
     t.equal(req.url, '/prebuilds/woohooo-' + opts.abi, 'correct url')
     res.statusCode = 200
     res.write('yep') // simulates hanging request
@@ -233,13 +233,13 @@ test('error during download should fail with no dangling temp file', function (t
 })
 
 test('should fail if abi is system abi with invalid binary', function (t) {
-  var opts = getOpts()
+  const opts = getOpts()
   opts.abi = process.versions.modules
   opts.pkg.binary = { host: 'http://localhost:8890' }
 
-  var server = http.createServer(function (req, res) {
+  const server = http.createServer(function (req, res) {
     res.statusCode = 200
-    var archive = path.join(__dirname, 'invalid.tar.gz')
+    const archive = path.join(__dirname, 'invalid.tar.gz')
     fs.createReadStream(archive).pipe(res)
   }).listen(8890, function () {
     download(util.getDownloadUrl(opts), opts, function (err) {

@@ -1,11 +1,11 @@
-var test = require('tape')
-var path = require('path')
-var exec = require('child_process').exec
-var execFileSync = require('child_process').execFileSync
-var fs = require('fs')
-var tempy = require('tempy') // Locked to 0.2.1 for node 6 support
-var cleanEnv = require('./util/clean-env')
-var npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+const test = require('tape')
+const path = require('path')
+const exec = require('child_process').exec
+const execFileSync = require('child_process').execFileSync
+const fs = require('fs')
+const tempy = require('tempy') // Locked to 0.2.1 for node 6 support
+const cleanEnv = require('./util/clean-env')
+const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 
 test('skips download in git dependency', function (t) {
   // We're not testing this flag. Just that we do hit the code paths before it
@@ -32,9 +32,9 @@ test('does not skip download in standalone package', function (t) {
 })
 
 function run (t, mode, args, cb) {
-  var addon = tempy.directory()
-  var logfile = path.join(addon, 'prebuild-install.log')
-  var cwd = addon
+  const addon = tempy.directory()
+  const logfile = path.join(addon, 'prebuild-install.log')
+  let cwd = addon
 
   writePackage(addon, {
     name: 'addon',
@@ -56,7 +56,7 @@ function run (t, mode, args, cb) {
     })
   }
 
-  var env = Object.assign(cleanEnv(process.env), {
+  const env = Object.assign(cleanEnv(process.env), {
     // We shouldn't hit npm or github
     npm_config_registry: 'http://localhost:1234',
     npm_config_addon_binary_host: 'http://localhost:1234',

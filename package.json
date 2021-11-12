@@ -3,8 +3,7 @@
   "version": "6.1.4",
   "description": "A command line tool to easily install prebuilt binaries for multiple version of node/iojs on a specific platform",
   "scripts": {
-    "test": "tape test/*-test.js && npm run lint",
-    "lint": "standard && hallmark",
+    "test": "standard && hallmark && tape test/*-test.js",
     "hallmark": "hallmark --fix"
   },
   "keywords": [
@@ -39,7 +38,7 @@
     "hallmark": "^3.0.0",
     "nock": "^10.0.6",
     "rimraf": "^2.5.2",
-    "standard": "^13.0.2",
+    "standard": "^16.0.4",
     "tape": "^4.5.1",
     "tempy": "0.2.1"
   },

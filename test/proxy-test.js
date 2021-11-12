@@ -1,14 +1,14 @@
-var test = require('tape')
-var proxy = require('../proxy')
+const test = require('tape')
+const proxy = require('../proxy')
 
 test('downloading using proxy', function (t) {
   t.plan(8)
 
-  var opts = {
+  const opts = {
     proxy: 'https://user:pass@hostname.com:8080'
   }
 
-  var reqOpts = {
+  const reqOpts = {
     url: 'https://api.github.com/repos/ralphtheninja/a-native-module/releases',
     json: true,
     headers: {
@@ -17,7 +17,7 @@ test('downloading using proxy', function (t) {
     }
   }
 
-  var request = proxy(reqOpts, opts)
+  const request = proxy(reqOpts, opts)
 
   t.equal(request.url, reqOpts.url, 'Request url remains the same')
   t.equal(request.json, reqOpts.json, 'Request json remains the same')
@@ -33,7 +33,7 @@ test('downloading using proxy', function (t) {
 test('downloading without using proxy', function (t) {
   t.plan(1)
 
-  var reqOpts = {
+  const reqOpts = {
     url: 'https://api.github.com/repos/ralphtheninja/a-native-module/releases',
     json: true,
     headers: {
@@ -42,6 +42,6 @@ test('downloading without using proxy', function (t) {
     }
   }
 
-  var request = proxy(reqOpts, {})
+  const request = proxy(reqOpts, {})
   t.equal(request.agent, undefined, 'Proxy is not set')
 })
