@@ -4,7 +4,7 @@
 
 ### Changed
 
-- **Breaking:** bump `node-abi` so that Electron 14+ gets correct ABI ([#161](https://github.com/prebuild/prebuild-install/issues/161)) ([`477f347`](https://github.com/prebuild/prebuild-install/commit/477f347)) (csett86). Drops support of Node.js &lt; 10.
+- **Breaking:** bump `node-abi` so that Electron 14+ gets correct ABI ([#161](https://github.com/prebuild/prebuild-install/issues/161)) ([`477f347`](https://github.com/prebuild/prebuild-install/commit/477f347)) (csett86). Drops support of Node.js < 10.
 - Bump `simple-get` ([`7468c14`](https://github.com/prebuild/prebuild-install/commit/7468c14)) (Vincent Weevers).
 
 ## [6.1.4] - 2021-08-11
