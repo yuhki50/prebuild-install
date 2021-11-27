@@ -40,6 +40,18 @@ Use [`prebuild`](https://github.com/prebuild/prebuild) to create and upload preb
 }
 ```
 
+When a consumer then installs your package with npm thus triggering the above install script, `prebuild-install` will download a suitable prebuilt binary, or exit with a non-zero exit code if there is none, which triggers `node-gyp rebuild` in order to build from source.
+
+Options (see below) can be passed to `prebuild-install` like so:
+
+```json
+{
+  "scripts": {
+    "install": "prebuild-install -r napi || node-gyp rebuild"
+  }
+}
+```
+
 ### Help
 
 ```
@@ -133,6 +145,14 @@ All prebuilt binaries are cached to minimize traffic. So first `prebuild-install
 - `${npm_config_cache}/_prebuilds`
 - `${APP_DATA}/npm-cache/_prebuilds`
 - `${HOME}/.npm/_prebuilds`
+
+## Install
+
+With [npm](https://npmjs.org) do:
+
+```
+npm install prebuild-install
+```
 
 ## License
 
