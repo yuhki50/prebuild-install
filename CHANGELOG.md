@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.0.1] - 2022-01-28
+
+### Changed
+
+- Upgrade to the latest version of `detect-libc` ([#166](https://github.com/prebuild/prebuild-install/issues/166)) ([`f71c6b9`](https://github.com/prebuild/prebuild-install/commit/f71c6b9)) (Lovell Fuller).
+
 ## [7.0.0] - 2021-11-12
 
 ### Changed
@@ -70,6 +76,8 @@
 ### Changed
 
 - Replace `mkdirp` dependency with `mkdirp-classic` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+[7.0.1]: https://github.com/prebuild/prebuild-install/releases/tag/v7.0.1
 
 [7.0.0]: https://github.com/prebuild/prebuild-install/releases/tag/v7.0.0
 
